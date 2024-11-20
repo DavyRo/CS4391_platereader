@@ -20,10 +20,10 @@ while True:
     # Increase dimensions by 2 to create larger frame
     # Final dimensions: 550*2*5//7 x 288*2
     frame_resized = cv2.resize(frame, (785, 576))
-    print(frame_resized.shape)
+    # print(frame_resized.shape) DEBUG
     # Resize frame in order to remove unnecessary/unreadable video
     frame_resized_cropped = frame_resized[200:576, 200:600]
-    cv2.imshow('Video Feed from Zaragoza Bridge (Press q to quit)', frame_resized_cropped)
+    cv2.imshow('Video from Zaragoza Bridge (q to quit)', frame_resized_cropped)
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 

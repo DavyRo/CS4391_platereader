@@ -12,13 +12,11 @@ def display_video(cap):
         
         # Resize frame to fit screen, match dimensions of real-time feed
         # Original video player resolution is 550x288 on webpage
-        # Actual video is thinner (roughly 1/7 of width on each side is white margin)
-        # Increase dimensions by 2 to create larger frame
-        # Final dimensions: 550*2*5//7 x 288*2
-        frame_resized = cv2.resize(frame, (785, 576))
+        frame_resized = cv2.resize(frame, (1100, 576))
+        #cv2.imshow('Video from Stanton Bridge (q to quit)', frame_resized)
         # Resize frame in order to remove unnecessary/unreadable video
-        frame_resized_cropped = frame_resized[200:576, 200:600]
-        cv2.imshow('Video from Zaragoza Bridge (q to quit)', frame_resized_cropped)
+        frame_resized_cropped = frame_resized[100:400, 100:400]
+        cv2.imshow('Video from Stanton Bridge (q to quit)', frame_resized_cropped)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
 
@@ -29,6 +27,6 @@ def display_video(cap):
 
 if __name__ == '__main__':
     # URL for Zaragoza Bridge
-    url = 'https://zoocams.elpasozoo.org/BridgeZaragoza3.m3u8'
+    url = 'https://zoocams.elpasozoo.org/BridgeStanton2.m3u8'
     cap = cv2.VideoCapture(url)
     display_video(cap)

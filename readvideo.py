@@ -26,7 +26,7 @@ def display_video(cap):
 
 
 if __name__ == '__main__':
-    # URL for Zaragoza Bridge
+    # URL for Stanton Bridge
     url = 'https://zoocams.elpasozoo.org/BridgeStanton2.m3u8'
     cap = cv2.VideoCapture(url)
     display_video(cap)

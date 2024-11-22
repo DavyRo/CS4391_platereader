@@ -3,3 +3,4 @@ numpy
 easyocr
 imutils
 matplotlib
+tesseract

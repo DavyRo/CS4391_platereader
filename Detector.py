@@ -6,6 +6,10 @@ import cv2
 import numpy as np
 import imutils
 from ultralytics import YOLO
+import string
+import easyocr
+
+ocrReader = easyocr.Reader(['en'], verbose=False)
 
 def display_video(cap):
     while True:
@@ -22,12 +26,9 @@ def display_video(cap):
         # Resize frame in order to remove unnecessary/unreadable video
         frame_resized_cropped = frame_resized[50:400, 100:400]
 
-        # convert to grayscale for easier processing
-        # grayScale = cv2.cvtColor(frame_resized_cropped, cv2.COLOR_BGR2GRAY)
-
         # load YOLO models
-        yoloModel = YOLO('yolov8n.pt', verbose=False)
-        license_plate_detector = YOLO('license_plate_detector.pt', verbose=False)
+        yoloModel = YOLO('yolov8n.pt')
+        license_plate_detector = YOLO('license_plate_detector.pt')
 
         # detect cars
         cars = [2, 3, 5, 7] # class numbers that are vehicles
@@ -39,6 +40,7 @@ def display_video(cap):
                 carDetections.append([x1, y1, x2, y2, score])
 
         # detect license plates
+        plateList = []
         plateCrop = frame_resized_cropped
         licensePlates = license_plate_detector(frame_resized_cropped, verbose=False)[0]
         for plate in licensePlates.boxes.data.tolist():
@@ -50,12 +52,25 @@ def display_video(cap):
 
                 # crop around license plate
                 temp = frame_resized_cropped[int(y1):int(y2), int(x1):int(x2), :]
-                plateCrop.resize(plateCrop, temp.shape)
+                plateCrop = cv2.resize(plateCrop, (temp.shape[1], temp.shape[0]))
                 plateCrop = temp
+
+                # convert to grayscale to process easier
+                plate_Grayscale = cv2.cvtColor(plateCrop, cv2.COLOR_BGR2GRAY)
+
+                # use OCR to read characters on the license plate
+                OCRdetections = ocrReader.readtext(plate_Grayscale)
+                for detection in OCRdetections:
+                    bbox, text, score = detection
+                    text = text.upper().replace(' ', '')
+                    print(text)
+                    plateList.append(text)
+
 
         # show image
         cv2.imshow('Video from Stanton Bridge (q to quit)', plateCrop)
         if cv2.waitKey(1) & 0xFF == ord('q'):
+            print(plateList)
             break
 
         # print plate number

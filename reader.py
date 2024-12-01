@@ -6,7 +6,7 @@ import easyocr
 from scipy.interpolate import interp1d
 
 # Initialize OCR reader for license plate text extraction
-reader = easyocr.Reader(["en"], gpu=False)
+reader = easyocr.Reader(["en"], gpu=True)
 
 # Mapping dictionaries for character conversion
 char_to_num = {"O": "0", "I": "1", "J": "3", "A": "4", "G": "6", "S": "5"}

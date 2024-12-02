@@ -187,13 +187,16 @@ while has_frame:
         for license_plate in license_plates.boxes.data.tolist():
             x1, y1, x2, y2, _, _ = license_plate
             cropped_image = frame[int(y1) : int(y2), int(x1) : int(x2)]
-            license_plate_text, _ = read_license_plate_text(cropped_image)
-            detection_results.append(
-                {
-                    "frame_number": frame_number,
-                    "license_number": license_plate_text or "",
-                }
-            )
+            license_plate_text, confidence = read_license_plate_text(cropped_image)
+            confidence = float(confidence) if confidence else 0
+            if confidence > 0.55:
+                detection_results.append(
+                    {
+                        "frame_number": frame_number,
+                        "license_number": license_plate_text or "",
+                        "confidence_score": confidence or 0,
+                    }
+                )
 
 # Save results to a CSV file
 save_to_csv(detection_results, "./results.csv")

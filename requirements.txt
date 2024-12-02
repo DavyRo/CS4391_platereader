@@ -1,6 +1,6 @@
-opencv-python
 numpy
+opencv-python
+ultralytics
 easyocr
-imutils
-matplotlib
-tesseract
+pandas
+scipy

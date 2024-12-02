@@ -172,6 +172,7 @@ video_sample = cv2.VideoCapture("./sample.mp4")
 
 # Process video frames to detect vehicles and license plates
 detection_results = []
+filtered_detection_results = []
 frame_number = -1
 has_frame = True
 
@@ -186,17 +187,25 @@ while has_frame:
         # Process each detected license plate
         for license_plate in license_plates.boxes.data.tolist():
             x1, y1, x2, y2, _, _ = license_plate
-            cropped_image = frame[int(y1) : int(y2), int(x1) : int(x2)]
+            cropped_image = frame[int(y1-1) : int(y2+1), int(x1-1) : int(x2+1)]
             license_plate_text, confidence = read_license_plate_text(cropped_image)
             confidence = float(confidence) if confidence else 0
             if confidence > 0.55:
-                detection_results.append(
+                filtered_detection_results.append(
                     {
                         "frame_number": frame_number,
                         "license_number": license_plate_text or "",
                         "confidence_score": confidence or 0,
                     }
                 )
+            detection_results.append(
+                {
+                    "frame_number": frame_number,
+                    "license_number": license_plate_text or "",
+                    "confidence_score": confidence or 0,
+                }
+            )
 
 # Save results to a CSV file
-save_to_csv(detection_results, "./results.csv")
+save_to_csv(filtered_detection_results, "./results.csv")
+save_to_csv(detection_results, "./results_unfiltered.csv")
